@@ -1,0 +1,4 @@
+Invoice Number:INV-2026-101
+Date:24-10-2026
+Email:customer@gmail.com	
+Total:Rs.5000

@@ -1,0 +1,32 @@
+========== SALES INVOICE ==========
+
+Invoice Number: INV20261001
+Invoice Date: 29-10-2026
+
+Customer Details:
+Customer Name: Arun Kumar
+Email: arun@gmail.com
+Contact: 9876543210
+Address: Chennai, Tamil Nadu
+
+Product Details:
+--------------------------------
+Product       Quantity    Price
+Laptop        1           Rs.45000
+Mouse         2           Rs.500
+Keyboard      1           Rs.1200
+Monitor       1           Rs.8500
+
+--------------------------------
+Subtotal: Rs.55700
+Tax: Rs.2785
+Discount: Rs.1000
+
+Total Amount: Rs.57485
+
+Payment Status: Paid
+Payment Mode: UPI
+
+Thank you for your purchase!
+
+========== END OF INVOICE ==========
