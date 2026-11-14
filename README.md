@@ -110,21 +110,23 @@ Run the following command from the project root:
 
 bash
 
-- txt
-documind -f invoice.txt  --format txt --output-format csv 
-documind -f invoice.txt  --format txt --output-format json
+- documind -f invoice.txt  --format txt --output-format csv 
+- documind -f invoice.txt  --format txt --output-format json
 
-- pdf 
-documind -f documind_sample.pdf  --format pdf --output-format csv
-documind -f documind_sample.pdf  --format pdf --output-format json
+bash
 
-- xlsx
-documind -f markz.xlsx  --format xlsx --output-format csv
-documind -f markz.xlsx  --format xlsx --output-format json
+- documind -f documind_sample.pdf  --format pdf --output-format csv
+- documind -f documind_sample.pdf  --format pdf --output-format json
 
-- jpg
-documind -f two.jpg  --format jpg --output-format csv
-documind -f two.jpg  --format jpg --output-format json
+bash
+
+- documind -f markz.xlsx  --format xlsx --output-format csv
+- documind -f markz.xlsx  --format xlsx --output-format json
+
+bash
+
+- documind -f two.jpg  --format jpg --output-format csv
+- documind -f two.jpg  --format jpg --output-format json
 
 Replace `documind_sample.pdf` with your input filename. Place input files in the `data/` directory.
 
