@@ -2,51 +2,70 @@
 from pathlib import Path
 import pandas as pd
 import json
+import csv
 
 
 #image
-import pandas as pd
-def convert_csv_image(metadata, extracted, text, output_file):
-    rows = []
-    for key, value in metadata.items():
-        rows.append({
-            "Type": "Metadata",
-            "Field": key,
-            "Value": value
-        })
-    for key, value in extracted.items():
-        rows.append({
-            "Type": "Extracted Field",
-            "Field": key,
-            "Value": value
-        })
-    rows.append({
-        "Type": "OCR Text",
-        "Field": "Raw Text",
-        "Value": text
-    })
-    df = pd.DataFrame(rows)
-    df.to_csv(output_file, index=False)
-    print(f"CSV saved: {output_file}")
+
+def convert_csv_image(metadata,raw_text, bill_info,output_file):
+    output_file=Path(output_file)
+    output_file.parent.mkdir(parents=True,exist_ok=True)
+    with open(output_file,"w",newline="",encoding="utf-8") as file:
+        writer = csv.writer(file)
+        writer.writerow("IMAGE METADATA")
+        writer.writerow(["Property","Value"])
+        for key,value in metadata.items():
+             writer.writerow([key,value])
+        writer.writerow([])
+        writer.writerow(["BILL INFORMATION"])
+        writer.writerow(["Field","Value"])
+        for key,value in bill_info.items():
+            writer.writerow([key,value])
+        writer.writerow([])
+        writer.writerow("ROW OCR TEXT")
+        writer.writerow(["Text"])
+        writer.writerow([raw_text])
+    print(f"CSV saved successfully: {output_file}")
 
 #pdf
-def converter_csv_pdf(pages,metadata,output_file):
-    rows = []
-    for key, value in metadata.items():
-            rows.append({
-                "Type": "Metadata",
-                "Field": key,
-                "Value": value
-            })
-    for page in pages:
-            rows.append({
-                "Type": "PDF Page",
-                "Field": f"Page {page['page_number']}",
-                "Value": page["text"]
-            })
-    df = pd.DataFrame(rows)
-    df.to_csv(output_file, index=False)
-    print(f"CSV saved: {output_file}")
+
+def converter_csv_pdf(data,output_file):
+    output_file=Path(output_file)
+    output_file.parent.mkdir(
+        parents=True,
+        exist_ok="utf-8",
+    )
+    with open(output_file,"w",newline="",encoding="utf-8") as file:
+        Writer = csv.writer(file)
+        Writer.writerow(["Category","Field","Value"])
+        #meta
+        for key,value in data["metadata"].items():
+            Writer.writerow(["metadata",key,value])
+        #impo field
+        for key,value in data["extracted_fields"].items():
+            Writer.writerow(["Extracted filed",key,value])
+        #text
+        for page in data["pages"]:
+            Writer.writerow([
+                "page Text", 
+                f"Page {page['page_number']}",
+                page["text"]
+                ])
+        #table
+        for item in data["tables"]:
+            for row_number,row in enumerate(item["data"],start=1):
+                Writer.writerow([
+                    "Table",
+                    f"Page {item['page']} Row {row_number}",
+                    "|".join(str(value or "") for value in row)
+                ])
+        #image
+        for img in data["images"]:
+            Writer.writerow(["Image",
+                             f"Page {img ['page']} Image {img['image_number']}",
+                             f"Width={img['width']},Height={img['height']}"
+                             ])
+    print(f"CSV saved:{output_file}")
 
 #xlsx
 def converter_csv_xlsx(df,summery,output_file):

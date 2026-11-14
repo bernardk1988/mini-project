@@ -1,3 +1,0 @@
-Python is easy.
-I am learning DocuMind.
-Text extraction is useful.

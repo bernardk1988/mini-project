@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import argparse
+import pdfplumber
 
 #pdf
 from extractor.extractor_pdf import extract_textfrom_pdf
@@ -16,8 +17,8 @@ from converter.converter_csv import converter_csv_xlsx
 from converter.converter_json import convert_json_xlsx
 
 #image
-from extractor.extractor_jpg import extract_data
-from display.display import display_image_data
+from extractor.extractor_jpg import extract_jpg
+from display.display import display_jpg_data
 from converter.converter_csv import convert_csv_image
 from  converter.converter_json import convert_json_image
 
@@ -55,6 +56,8 @@ def parse():
     RESULT_DIR.mkdir(parents=True,exist_ok=True)
     output_path = BASE_DIR / "result"
     output_file = output_path / f"{input_path.stem}.{args.output_format}"
+    
+    
     match args.format:
         case "txt":
             print("TXT File")
@@ -77,23 +80,23 @@ def parse():
                     convert_json_xlsx(df,summery,output_file)
         case "pdf":
             print("PDF File")
-            pages,metadata = extract_textfrom_pdf(input_path)
-            display_pdf_data(pages,metadata)
+            data = extract_textfrom_pdf(input_path)
+            display_pdf_data(data)
             match args.output_format:
                 case "csv":
-                    converter_csv_pdf(pages,metadata,output_file)
+                    converter_csv_pdf(data,output_file)
                 case "json":
-                    convert_json_pdf(pages, metadata, output_file)
-        case "jpg" | "pdf":
-            print(f"{args.format.upper()} File")
-            metadata, text, extracted = extract_data(input_path)
-            display_image_data(metadata, text, extracted)
-            match args.output_format:
-                case "csv":
-                  convert_csv_image(metadata,extracted,text,output_file)
-                case "json":
-                  convert_json_image(metadata,extracted,text,output_file)
+                    convert_json_pdf(data, output_file)
 
+        case "jpg":
+            print(f"{args.format.upper()} File")
+            metadata,raw_text,bill_info= extract_jpg(input_path)
+            display_jpg_data(metadata,raw_text,bill_info)
+            match args.output_format:
+                case "csv":
+                    convert_csv_image(metadata,raw_text,bill_info,output_file)
+                case "json":
+                    convert_json_image(metadata,raw_text,bill_info,output_file)
                 
 if __name__ =="__main__":
     parse()

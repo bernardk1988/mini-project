@@ -1,62 +1,79 @@
 
-
-import re
 from pathlib import Path
 from PIL import Image
 import pytesseract
-from pdf2image import convert_from_path
+import pandas as pd
+import re
+import cv2
+import numpy as np
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
-def get_image_metadata(image,file_name):
-    return{
-        "file_name":file_name,
-        "format":str(image.format or "PDF page"),
-        "mode":image.mode,
-        "width":image.width,
-        "height":image.height,
-        "size_bytes":Path(file_name).stat().st_size 
-        if Path(file_name).is_file() else 0
-    }
-
-def extract_data(file_path):
-    file_path = Path(file_path)
-    metadata = {"file_name":file_path.name}
-    text=""
-    if file_path.suffix.lower() == ".pdf":
-        pages=convert_from_path(file_path, dpi=200)
-        metadata["page_count"]= len(pages)
-        metadata["file_type"]="PDF"
-        for number,page in enumerate(pages,start=1):
-            metadata["page_{number}_width"]=page.width
-            metadata["page_{number}_height"]=page.height
-            text+=f"----{number}----"
-            text+=pytesseract.image_to_string(page)
-        return metadata.pages
-    else:
-        with Image.open(file_path) as image:
-            metadata.update(
-                get_image_metadata(image,str(file_path))
+def extract_jpg(image_path):
+    image_path = Path(image_path) 
+    with Image.open(image_path) as original:
+        metadata = {
+            "file_name":image_path.name,
+            "format": original.format,
+            "mode":original.mode,
+            "width":original.width,
+            "height":original.height,
+            "size_bytes":image_path.stat().st_size,
+        }
+        image = original.convert("RGB")
+    img = np.array(image)
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    gray = cv2.resize(
+        gray,
+        None,
+        fx=2,
+        fy=2,
+        interpolation=cv2.INTER_CUBIC
+    )
+    processed = cv2.GaussianBlur(
+        gray, (3, 3), 0
+    )
+    config = "--oem 3 --psm 6"
+    raw_text = pytesseract.image_to_string(processed,lang="eng",config=config)
+    bill_info = {}
+    bill_match = re.search(
+        r"(?:bill|invoice|receipt)\s*"
+        r"(?:no\.?|number|#)?\s*[:\-]?\s*"
+        r"([A-Z0-9][A-Z0-9/-]*)",
+        raw_text,
+        re.IGNORECASE
+    )
+    bill_info["bill_number"] = (bill_match.group(1) if bill_match else None)
+     # Date
+    date_match = re.search(
+        r"\b(?:[A-Z][a-z]{2,8}\s+\d{1,2},\s*\d{4}|\d{1,2}[-/]\d{1,2}[-/]\d{4})\b",
+        raw_text
+    )
+    bill_info["bill_date"] = (date_match.group(0) if date_match else None)
+    # Time
+    time_match = re.search(
+        r"\b(?:[01]?\d|2[0-3]):[0-5]\d"
+        r"(?::[0-5]\d)?\s*(?:AM|PM)?\b",
+        raw_text,
+        re.IGNORECASE
+    )
+    bill_info["bill_time"] = (time_match.group(0) if time_match else None)
+    total_amount = None
+    for line in raw_text.splitlines():
+        if re.search(
+            r"\b(grand\s*total|total\s*amount|"
+            r"amount\s*payable|net\s*amount|total)\b",
+            line,
+            re.IGNORECASE
+        ):
+            amount_match = re.search(
+                r"(?:₹|Rs\.?|INR)?\s*"
+                r"\d[\d,]*(?:\.\d{1,2})?",
+                line,
+                re.IGNORECASE
             )
-            text = pytesseract.image_to_string(image)
-        metadata["file_type"]="Image"
-
-    # Regex patterns for common invoice fields
-    patterns = {
-        "Invoice No": r"Invoice\s*(?:Number|No\.?)\s*[:#-]?\s*([A-Z0-9/-]+)",
-        "Email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b",
-        "Contact No": r"(?:Contact|Phone|Mobile)\s*(?:No\.?)?\s*[:#-]?\s*([+()\d][\d\s()+-]{7,}\d)",
-        "Amount (Rs)": r"\bRs\.?\s*([0-9,]+(?:\.\d{1,2})?)",
-        "Date": r"\b(\d{1,2}[-/]\d{1,2}[-/]\d{2,4})\b",
-        "Place": r"\bPlace\s*:\s*([^\n,]+)"
-    }
-
-    extracted = {}
-
-    for field, pattern in patterns.items():
-        match = re.search(pattern, text, re.IGNORECASE)
-        extracted[field] = match.group(1).strip() if match and match.lastindex else (
-            match.group(0).strip() if match else "Not found"
-        )
-
-    return metadata, text, extracted
+            if amount_match:
+                total_amount = amount_match.group(0).strip()
+                break
+    bill_info["total_amount"] = total_amount
+    return metadata,raw_text,bill_info

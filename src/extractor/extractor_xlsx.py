@@ -5,9 +5,7 @@ import pandas as pd
 
 def extractor_xlsx(input_path):
     input_path =Path(input_path)
-    if input_path.suffix.lower() == ".csv":
-        df = pd.read_csv(input_path)
-    elif input_path.suffix.lower() ==".xlsx":
+    if input_path.suffix.lower() ==".xlsx":
         df =pd.read_excel(input_path)
     else:
         raise

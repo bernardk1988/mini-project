@@ -1,6 +1,4 @@
 
-
-
 #xlsx
 
 import pandas as pd
@@ -11,8 +9,6 @@ from rich.table import Table
 console = Console()
 
 def display_xlsx_data(df,summery):
-    #print("\nCleaned  Tabular Data")
-    #print(tabulate(df,headers="keys",tablefmt="rounded_grid",showindex=False))
     table = Table(
        title="Cleaned Tabular Data",
        border_style="red",
@@ -53,17 +49,6 @@ def display_txt_data(data):
      for key,value in data["metadata"].items():
           table.add_row(str(key),str(value))
      console.print(table)
-
-     # print("=====METADATA=====\n")
-     # metadata_rows = [
-     #      {"Fields":key,"Value":value}
-     #      for key,value in data["metadata"].items()
-     # ]
-     # print(tabulate(
-     #      metadata_rows,
-     #      headers="keys",
-     #      tablefmt="rounded_grid"
-     # ))
      print("\n=====KEYWORDS======\n")
      keyword_rows = [
           {"keyword":key,"count":value}

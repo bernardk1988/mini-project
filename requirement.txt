@@ -1,7 +1,8 @@
 pandas
 pdfplumber
-pdf2image
 Pillow
 pytesseract
 tabulate
 rich
+cv2
+numpy
