@@ -31,21 +31,22 @@ from the command line and export the processed results into CSV or JSON files.
 
 ## Technology Stack
 
-|Technology |Purpose|
-|- Python|main programming language|
-|- Argparse|-Command-line arguments|
-|- pathlib|-file and folder handling|
-|- Pandas|-excel and tabular data analysis|
-|- PDFPlumber|-PDF text and table extraction|
-|- Pillow|-image processing|
-|- Pytesseract|-image OCR|
-|- CV2| - image processing|
-|- NumPy| - Numerical arrays and calculations|
-|- Regex(re)|-Extract important information|
-|- Tabulate|-Display formated table|
-|- Rich|-Terminal Display colourful|
-|- JSON|-Store extrated data|
-|- CSV|-Export extracted data|
+| Technology | Purpose |
+|---|---|
+| Python | Main programming language |
+| Argparse | Command-line arguments |
+| Pathlib | File and folder handling |
+| Pandas | Excel and tabular data analysis |
+| PDFPlumber | PDF text and table extraction |
+| Pillow (PIL) | Image processing |
+| Pytesseract | Image OCR |
+| OpenCV (CV2) | Image processing and computer vision |
+| NumPy | Numerical arrays and calculations |
+| Regex (re) | Extract important information |
+| Tabulate | Display formatted tables |
+| Rich | Colourful terminal display |
+| JSON | Store extracted data |
+| CSV | Export extracted data |
 
 ## Project Structure
 ```
