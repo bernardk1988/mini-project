@@ -99,7 +99,7 @@ mini project/
 
 - clone the repository
   ```
-  git clone url(your github repository url)
+  git clone https://github.com/bernardk1988/mini-project.git
   ```
 - move into the project folder
   ```
