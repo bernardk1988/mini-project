@@ -109,26 +109,30 @@ pip install -r requirements.txt
 
 Run the following command from the project root:
 
-```bash
-- documind -f invoice.txt  --format txt --output-format csv 
+```
+documind -f invoice.txt  --format txt --output-format csv 
 ```
 ```
-- documind -f invoice.txt  --format txt --output-format json
+documind -f invoice.txt  --format txt --output-format json
 ```
-bash
-
-- documind -f documind_sample.pdf  --format pdf --output-format csv
-- documind -f documind_sample.pdf  --format pdf --output-format json
-
-bash
-
-- documind -f markz.xlsx  --format xlsx --output-format csv
-- documind -f markz.xlsx  --format xlsx --output-format json
-
-bash
-
-- documind -f two.jpg  --format jpg --output-format csv
-- documind -f two.jpg  --format jpg --output-format json
+```
+documind -f documind_sample.pdf  --format pdf --output-format csv
+```
+```
+documind -f documind_sample.pdf  --format pdf --output-format json
+```
+```
+documind -f markz.xlsx  --format xlsx --output-format csv
+```
+```
+documind -f markz.xlsx  --format xlsx --output-format json
+```
+```
+documind -f two.jpg  --format jpg --output-format csv
+```
+```
+documind -f two.jpg  --format jpg --output-format json
+```
 
 Replace `documind_sample.pdf` with your input filename. Place input files in the `data/` directory.
 
