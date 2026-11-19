@@ -98,12 +98,18 @@ mini project/
 ## Installation
 
 - clone the repository
-    git clone url(your github repository url)
+  ```
+  git clone url(your github repository url)
+  ```
 - move into the project folder
-    cd projectcareerzen
+  ```
+  cd projectcareerzen
+  ```
 - Install the required libraries:
 bash
+```
 pip install -r requirements.txt
+```
 
 ## Usage
 
