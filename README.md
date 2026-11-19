@@ -110,8 +110,9 @@ pip install -r requirements.txt
 Run the following command from the project root:
 
 ```bash
-
 - documind -f invoice.txt  --format txt --output-format csv 
+```
+```
 - documind -f invoice.txt  --format txt --output-format json
 ```
 bash
